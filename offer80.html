@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مولّد عرض الثمانين – ديمو فكرة</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:#1f3fd1;color:#fff;min-height:100vh;padding:20px}
+.w{max-width:480px;margin:0 auto}
+h1{color:#fcd20f;font-size:30px;line-height:1.3;margin:10px 0}
+p.sub{opacity:.85;margin:0 0 18px}
+.card{background:#f7f6f2;color:#10205a;border-radius:18px;padding:18px;margin-bottom:16px}
+label{display:block;font-weight:700;margin:10px 0 6px}
+input{width:100%;padding:14px;border-radius:12px;border:2px solid #cfd3e6;font-size:17px;font-family:inherit}
+button{width:100%;margin-top:14px;padding:15px;border:0;border-radius:12px;background:#fcd20f;color:#10205a;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer}
+.tag{display:inline-block;background:#fcd20f;color:#10205a;font-weight:800;padding:3px 10px;border-radius:6px;font-size:13px}
+.price{font-size:54px;font-weight:900;color:#1f3fd1;margin:6px 0}
+.price small{font-size:20px}
+.old{text-decoration:line-through;opacity:.5}
+.line{font-size:18px;font-weight:700;margin:8px 0}
+.ex{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ex span{background:#e6e9fb;border-radius:20px;padding:6px 12px;font-size:14px;cursor:pointer}
+.note{font-size:12px;opacity:.75;text-align:center;margin-top:14px;line-height:1.7}
+#out{display:none}
+</style></head><body><div class="w">
+<h1>كل شي عندنا<br>ثمانين هللة 🟡</h1>
+<p class="sub">اكتب منتج وسعره، وشوف كيف يصير عرض بتوقيع الـ٨٠.</p>
+
+<div class="card">
+<label>المنتج</label><input id="n" placeholder="مثال: بطيخة">
+<div class="ex" id="ex"><span>بطيخة</span><span>كرسي مكتب</span><span>لابتوب</span><span>قلب</span></div>
+<label>السعر بالريال</label><input id="p" type="number" inputmode="decimal" placeholder="مثال: 9" min="0">
+<button id="go">سوّي العرض</button>
+</div>
+
+<div class="card" id="out">
+<span class="tag">عرض الثمانين</span>
+<div class="line" id="name"></div>
+<div class="price"><span id="rs"></span><small> ريال و٨٠ هللة</small></div>
+<div class="old" id="old"></div>
+<div class="line" id="slogan"></div>
+<div class="line" id="vo"></div>
+<button id="cp">انسخ النص</button>
+</div>
+
+<p class="note">ديمو فكرة غير رسمي، ما له علاقة بشركة كيو.<br>صُنع بمساعدة الذكاء الاصطناعي (Claude)، والفكرة والتوجيه مني.</p>
+</div>
+<script>
+var slogans=["الريال يتغير، والثمانين ثابتة.","مهما تغيّر السعر، الثمانين ما تغيب.","ريالات على كيفك… والهللات علينا.","سعر يعرف أخر رقمه."];
+var vos=["كم سعرها؟ … %s ريال و٨٠ هللة.","جرب تخمّن: %s ريال، والباقي ثمانين.","ما أحد يسأل عن الهللات، كلنا نعرفها: ٨٠."];
+function ar(n){return String(n).replace(/\d/g,function(d){return "٠١٢٣٤٥٦٧٨٩"[d]})}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+document.querySelectorAll("#ex span").forEach(function(s){s.onclick=function(){document.getElementById("n").value=s.textContent}});
+var txt="";
+document.getElementById("go").onclick=function(){
+ var n=document.getElementById("n").value.trim()||"المنتج";
+ var p=parseFloat(document.getElementById("p").value);
+ if(isNaN(p)||p<0){document.getElementById("p").focus();return}
+ var r=Math.floor(p);
+ var old=(r+Math.max(2,Math.round(r*0.25)));
+ var s=pick(slogans),v=pick(vos).replace("%s",ar(r));
+ document.getElementById("name").textContent=n;
+ document.getElementById("rs").textContent=ar(r);
+ document.getElementById("old").textContent="بدل "+ar(old)+" ريال و٨٠ هللة";
+ document.getElementById("slogan").textContent=s;
+ document.getElementById("vo").textContent="🎬 "+v;
+ txt=n+": "+ar(r)+" ريال و٨٠ هللة\n"+s+"\n"+v;
+ document.getElementById("out").style.display="block";
+ document.getElementById("out").scrollIntoView({behavior:"smooth"});
+};
+document.getElementById("cp").onclick=function(){
+ var b=this;try{navigator.clipboard.writeText(txt).then(function(){b.textContent="تم النسخ ✓"})}catch(e){b.textContent="انسخه يدويًا"}
+};
+</script></body></html>
